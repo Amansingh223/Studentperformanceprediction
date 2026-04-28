@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Predict — Student Performance</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0a0d12;
+  --surface:#111720;
+  --surface2:#18202c;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.13);
+  --text:#eef1f7;
+  --muted:#6b7a8d;
+  --accent:#6366f1;
+  --accent2:#a78bfa;
+  --accent-soft:rgba(99,102,241,0.12);
+  --green:#22c55e;
+  --green-soft:rgba(34,197,94,0.1);
+}
+body{
+  background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;
+  background-image:radial-gradient(circle at 10% 10%,rgba(99,102,241,0.13) 0%,transparent 35%),
+                   radial-gradient(circle at 90% 90%,rgba(167,139,250,0.08) 0%,transparent 35%);
+  padding:2rem 1rem 4rem;
+}
+.container{max-width:780px;margin:0 auto;}
+
+/* topbar */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;}
+.logo{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--text);letter-spacing:-0.03em;}
+.logo span{color:var(--accent2);}
+.back{color:var(--muted);font-size:0.83rem;text-decoration:none;border:1px solid var(--border);border-radius:999px;padding:0.4rem 0.9rem;transition:color 0.2s,border-color 0.2s;}
+.back:hover{color:var(--text);border-color:var(--border2);}
+
+/* header */
+.page-header{margin-bottom:2rem;}
+.kicker{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent2);margin-bottom:0.5rem;}
+.page-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-0.03em;margin-bottom:0.5rem;}
+.page-sub{color:var(--muted);font-size:0.88rem;line-height:1.7;}
+
+/* card */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:2rem;margin-bottom:1.5rem;}
+
+/* form grid */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.form-group{display:flex;flex-direction:column;gap:0.45rem;}
+.form-group.full{grid-column:1/-1;}
+label{font-size:0.73rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);}
+select,input[type=number]{
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.9rem;
+  padding:0.7rem 0.9rem;outline:none;transition:border-color 0.2s;width:100%;
+  appearance:none;-webkit-appearance:none;
+}
+select:focus,input[type=number]:focus{border-color:rgba(99,102,241,0.5);}
+select option{background:var(--surface2);}
+
+/* score row */
+.score-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.score-hint{font-size:0.74rem;color:var(--muted);margin-top:0.3rem;}
+
+/* submit */
+.submit-btn{
+  width:100%;margin-top:0.5rem;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border:none;border-radius:999px;color:#fff;
+  font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;
+  padding:0.9rem 1.5rem;cursor:pointer;
+  box-shadow:0 8px 28px rgba(99,102,241,0.3);
+  transition:transform 0.18s,box-shadow 0.18s;
+}
+.submit-btn:hover{transform:translateY(-1px);box-shadow:0 12px 36px rgba(99,102,241,0.42);}
+
+/* result */
+.result-card{
+  background:linear-gradient(135deg,rgba(34,197,94,0.08),rgba(99,102,241,0.08));
+  border:1px solid rgba(34,197,94,0.25);
+  border-radius:24px;padding:2rem;text-align:center;margin-bottom:1.5rem;
+  animation:fadeIn 0.5s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.result-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--green);margin-bottom:0.5rem;}
+.result-score{font-family:'Playfair Display',serif;font-size:5rem;color:var(--text);line-height:1;}
+.result-unit{font-size:1.2rem;color:var(--muted);margin-top:0.4rem;}
+.result-bar-wrap{background:var(--surface2);border-radius:999px;height:8px;margin:1.2rem auto;max-width:400px;overflow:hidden;}
+.result-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--accent2));transition:width 1s ease;}
+
+/* section title */
+.section-title{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:1.2rem;color:var(--text);}
+
+@media(max-width:600px){
+  .form-grid,.score-row{grid-template-columns:1fr;}
+  .form-group.full{grid-column:1;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="topbar">
+    <div class="logo">Student<span>.</span>AI</div>
+    <a href="/" class="back">← Home</a>
+  </div>
+
+  {% if results is defined and results != None %}
+  <div class="result-card">
+    <div class="result-label">Predicted Math Score</div>
+    <div class="result-score">{{ results }}</div>
+    <div class="result-unit">out of 100</div>
+    <div class="result-bar-wrap">
+      <div class="result-bar" style="width:{{ results }}%"></div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="page-header">
+    <div class="kicker">Prediction form</div>
+    <div class="page-title">Student Details</div>
+    <div class="page-sub">Fill in the student's background and scores to predict their math performance.</div>
+  </div>
+
+  <form method="post" action="/predict">
+    <div class="card">
+      <div class="section-title">Demographics</div>
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Gender</label>
+          <select name="gender" required>
+            <option value="" disabled selected>Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Race / Ethnicity</label>
+          <select name="ethnicity" required>
+            <option value="" disabled selected>Select group</option>
+            <option value="group A">Group A</option>
+            <option value="group B">Group B</option>
+            <option value="group C">Group C</option>
+            <option value="group D">Group D</option>
+            <option value="group E">Group E</option>
+          </select>
+        </div>
+
+        <div class="form-group full">
+          <label>Parental Level of Education</label>
+          <select name="parental_level_of_education" required>
+            <option value="" disabled selected>Select education level</option>
+            <option value="some high school">Some High School</option>
+            <option value="high school">High School</option>
+            <option value="some college">Some College</option>
+            <option value="associate's degree">Associate's Degree</option>
+            <option value="bachelor's degree">Bachelor's Degree</option>
+            <option value="master's degree">Master's Degree</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Lunch Type</label>
+          <select name="lunch" required>
+            <option value="" disabled selected>Select lunch type</option>
+            <option value="standard">Standard</option>
+            <option value="free/reduced">Free / Reduced</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Test Preparation Course</label>
+          <select name="test_preparation_course" required>
+            <option value="" disabled selected>Select option</option>
+            <option value="none">None</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Other Subject Scores</div>
+      <div class="score-row">
+        <div class="form-group">
+          <label>Reading Score</label>
+          <input type="number" name="reading_score" min="0" max="100" placeholder="e.g. 72" required/>
+          <div class="score-hint">Enter score between 0 – 100</div>
+        </div>
+        <div class="form-group">
+          <label>Writing Score</label>
+          <input type="number" name="writing_score" min="0" max="100" placeholder="e.g. 68" required/>
+          <div class="score-hint">Enter score between 0 – 100</div>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn">Predict Math Score →</button>
+  </form>
+
+</div>
+</body>
+</html>
