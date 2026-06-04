@@ -2,15 +2,10 @@
 
 An advanced Machine Learning web application that predicts a student's final academic performance and automatically detects whether they are at risk of failing — with detailed reasons.
 
-![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python)
-![Flask](https://img.shields.io/badge/Flask-Web_App-lightgrey?logo=flask)
-![ML](https://img.shields.io/badge/ML-Scikit_Learn-orange?logo=scikit-learn)
-![XGBoost](https://img.shields.io/badge/XGBoost-Boosting-green)
-![CatBoost](https://img.shields.io/badge/CatBoost-Gradient_Boosting-yellow)
 
 ---
 
-## ✨ Features
+## Features
 
 | Feature | Description |
 |---------|-------------|
@@ -19,21 +14,9 @@ An advanced Machine Learning web application that predicts a student's final aca
 | **Risk Assessment** | Flags at-risk students with specific reasons like "Low attendance", "Poor quiz scores" |
 | **Premium Dark UI** | Fully responsive dark-themed interface with glassmorphism effects and smooth animations |
 
-## 🔍 Input Features
 
-The system analyzes multiple actionable data points:
 
-- 📊 **Attendance Percentage** — Regular class participation
-- 📝 **Internal Marks** — Mid-semester exam performance (out of 50)
-- 📋 **Assignment Score** — Homework and project completion
-- ❓ **Quiz Score** — Pop quiz and class test results
-- ⏰ **Study Hours/Week** — Self-study commitment
-- 🎯 **Previous CGPA** — Past semester academic record
-- 🏢 **Branch** — Department (CSE, ECE, ME, CE, EE)
-- 📅 **Semester** — Current semester (1–8)
-- 🏆 **Activity Participation** — Extracurricular involvement
-
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Backend:** Python, Flask, Pandas, NumPy
 - **Machine Learning:** Scikit-Learn, XGBoost, CatBoost, GridSearchCV
@@ -42,7 +25,7 @@ The system analyzes multiple actionable data points:
 
 ---
 
-## 🚀 How to Run Locally
+## How to Run Locally
 
 ### 1. Clone the repository
 
@@ -79,7 +62,7 @@ Open your browser and navigate to **http://127.0.0.1:5000**
 
 ---
 
-## 🧠 Model Training
+## Model Training
 
 The pre-trained model is already included in `artifacts/`. If you want to retrain on the synthetic dataset:
 
@@ -109,13 +92,13 @@ The best model (by R² score) is automatically selected and saved.
 5. Render will detect the `Dockerfile` automatically
 6. Set the **Free** plan and click **Deploy**
 
-The app will be live at `https://your-app-name.onrender.com`
+The app will be live at `https://studentperformanceprediction-1-4n37.onrender.com/`
 
 > **Note:** On Render's free tier, the service spins down after 15 minutes of inactivity. The first request after that takes ~30 seconds to cold-start.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Studentperformanceprediction/
@@ -148,7 +131,3 @@ Studentperformanceprediction/
 ```
 
 ---
-
-## 📜 License
-
-This project is open source and available under the [MIT License](LICENSE).
