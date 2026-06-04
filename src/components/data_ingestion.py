@@ -22,7 +22,9 @@ class DataIngestion:
     def initiate(self):
         logger.info("Starting data ingestion")
         try:
-            df = pd.read_csv(os.path.join("notebook", "data", "StudentsPerformance.csv"))
+            df = pd.read_csv(
+                os.path.join("notebook", "data", "student_performance_data.csv")
+            )
             logger.info(f"Dataset loaded: {df.shape}")
 
             os.makedirs(os.path.dirname(self.config.raw_data_path), exist_ok=True)
