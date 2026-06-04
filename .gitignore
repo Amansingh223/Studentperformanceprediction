@@ -2,7 +2,9 @@ venv/
 __pycache__/
 *.pyc
 .env
-artifacts/
+artifacts/raw.csv
+artifacts/train.csv
+artifacts/test.csv
 logs/
 fix.py
 *.egg-info/
