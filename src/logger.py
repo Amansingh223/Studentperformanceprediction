@@ -7,9 +7,18 @@ LOG_DIR = os.path.join(os.getcwd(), "logs")
 os.makedirs(LOG_DIR, exist_ok=True)
 LOG_FILE_PATH = os.path.join(LOG_DIR, LOG_FILE)
 
-logging.basicConfig(
-    filename=LOG_FILE_PATH,
-    format="[%(asctime)s] %(lineno)d %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO,
-)
+LOG_FORMAT = "[%(asctime)s] %(lineno)d %(name)s - %(levelname)s - %(message)s"
+
+try:
+    logging.basicConfig(
+        filename=LOG_FILE_PATH,
+        format=LOG_FORMAT,
+        level=logging.INFO,
+    )
+except OSError:
+    logging.basicConfig(
+        format=LOG_FORMAT,
+        level=logging.INFO,
+    )
+
 logger = logging.getLogger(__name__)
